@@ -6,4 +6,3 @@ pub struct BaseHtml {
     pub title: String,
     pub content: String,
 }
-

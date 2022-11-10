@@ -1,16 +1,8 @@
 use axum::{
-    handler::Handler,
     http::StatusCode,
     response::{Html, IntoResponse},
-    routing::{get, post},
-    Json, Router,
 };
-use boilerplate::Boilerplate;
-use html_escaper::{Escape, Trusted};
-use serde::{Deserialize, Serialize};
-use std::net::SocketAddr;
 
-//mod templates;
 use crate::templates;
 
 pub async fn root() -> Html<String> {

@@ -1,13 +1,5 @@
-use axum::{
-    handler::Handler,
-    http::StatusCode,
-    response::{Html, IntoResponse},
-    routing::{get, post},
-    Json, Router,
-};
-use boilerplate::Boilerplate;
-use html_escaper::{Escape, Trusted};
-use serde::{Deserialize, Serialize};
+use axum::{handler::Handler, routing::get, Router};
+
 use std::net::SocketAddr;
 
 pub mod handlers;

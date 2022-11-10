@@ -6,3 +6,6 @@ pub struct BaseHtml {
     pub title: String,
     pub content: String,
 }
+
+#[derive(Boilerplate)]
+pub struct StyleCss {}

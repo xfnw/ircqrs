@@ -9,3 +9,12 @@ pub struct BaseHtml {
 
 #[derive(Boilerplate)]
 pub struct StyleCss {}
+
+#[derive(Boilerplate)]
+pub struct QuoteHtml {
+    pub first: u32,
+    pub last: u32,
+    pub previous: u32,
+    pub next: u32,
+    pub quote: String,
+}

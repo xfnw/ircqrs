@@ -1,13 +1,16 @@
 use axum::{
-    http::StatusCode,
-    response::{Html, IntoResponse, AppendHeaders},
     http::header::CONTENT_TYPE,
+    http::StatusCode,
+    response::{AppendHeaders, Html, IntoResponse},
 };
 
 use crate::templates;
 
 pub async fn css() -> impl IntoResponse {
-    (AppendHeaders([(CONTENT_TYPE, "text/css")]),templates::StyleCss {}.to_string())
+    (
+        AppendHeaders([(CONTENT_TYPE, "text/css")]),
+        templates::StyleCss {}.to_string(),
+    )
 }
 
 pub async fn root() -> Html<String> {

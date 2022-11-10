@@ -1,6 +1,7 @@
 use axum::{
+    handler::Handler,
     http::StatusCode,
-    response::Html,
+    response::{Html, IntoResponse},
     routing::{get, post},
     Json, Router,
 };
@@ -11,13 +12,15 @@ use std::net::SocketAddr;
 
 #[derive(Boilerplate)]
 struct BaseHtml {
-    title: &'static str,
-    content: &'static str,
+    title: String,
+    content: String,
 }
 
 #[tokio::main]
 async fn main() {
-    let app = Router::new().route("/", get(root));
+    let app = Router::new()
+        .route("/", get(root))
+        .fallback(handler_404.into_service());
 
     let addr = SocketAddr::from(([127, 0, 0, 1], 8326));
     eprintln!("listening on {}", addr);
@@ -29,9 +32,22 @@ async fn main() {
 
 async fn root() -> Html<String> {
     let output = BaseHtml {
-        title: "hello, world",
-        content: "none",
+        title: "hello, world".to_string(),
+        content: "none".to_string(),
     }
     .to_string();
     Html(output)
+}
+
+async fn handler_404() -> impl IntoResponse {
+    (
+        StatusCode::NOT_FOUND,
+        Html(
+            BaseHtml {
+                title: "404 not found".to_string(),
+                content: "the requested quote does not exist".to_string(),
+            }
+            .to_string(),
+        ),
+    )
 }

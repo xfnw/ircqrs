@@ -15,6 +15,8 @@ async fn main() {
     let app = Router::new()
         .route("/", get(handlers::root))
         .route("/style.css", get(handlers::css))
+        .route("/random", get(handlers::random))
+        .route("/:quote", get(handlers::view_quote))
         .fallback(handlers::handler_404.into_service());
 
     let addr = get_listen();

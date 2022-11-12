@@ -8,3 +8,7 @@ body {
 pre {
 	font-size: 12pt;
 }
+center > a {
+	font-size: 150%;
+	text-decoration: none;
+}

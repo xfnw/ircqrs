@@ -6,7 +6,7 @@ pub mod handlers;
 pub mod templates;
 
 fn get_listen() -> SocketAddr {
-    // FIXME: allow customizing this via args or environment variable
+    // TODO: allow customizing this via args or environment variable
     SocketAddr::from(([127, 0, 0, 1], 8326))
 }
 

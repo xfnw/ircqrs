@@ -5,3 +5,6 @@ body {
 	max-width: 70em;
 	margin: 0 auto;
 }
+pre {
+	font-size: 12pt;
+}

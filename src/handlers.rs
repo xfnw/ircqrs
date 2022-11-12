@@ -2,12 +2,17 @@ use axum::{
     extract::Path,
     http::header::CONTENT_TYPE,
     http::StatusCode,
-    response::{AppendHeaders, Html, IntoResponse},
+    response::{AppendHeaders, Html, IntoResponse, Redirect},
 };
+use rand::Rng;
 use std::error::Error;
 use tokio::fs;
 
 use crate::templates;
+
+// TODO: set this somewhere else lol
+static min: u32 = 0;
+static max: u32 = 69;
 
 pub async fn css() -> impl IntoResponse {
     (
@@ -42,8 +47,11 @@ pub async fn handler_404() -> impl IntoResponse {
     tuple_404()
 }
 
-pub async fn random() -> Html<String> {
-    Html("not yet implemented".to_string())
+pub async fn random() -> Redirect {
+    let mut rng = rand::thread_rng();
+    let randnum: u32 = rng.gen_range(min..max);
+    //let uri: str = format!("/{}",randnum);
+    Redirect::temporary(&*format!("/{}", randnum))
 }
 
 async fn read_file(filename: String) -> Result<Vec<u8>, Box<dyn Error>> {
@@ -54,10 +62,6 @@ async fn read_file(filename: String) -> Result<Vec<u8>, Box<dyn Error>> {
 }
 
 fn make_quote_page(quoteid: u32, content: String) -> Html<String> {
-    // TODO: set this somewhere else lol
-    let min = 0;
-    let max = 69;
-
     let mut previous = quoteid;
     let mut next = quoteid;
     if quoteid > min {

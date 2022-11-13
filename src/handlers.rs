@@ -11,8 +11,11 @@ use tokio::fs;
 use crate::templates;
 
 // TODO: set this somewhere else lol
-static min: u32 = 0;
-static max: u32 = 69;
+static MIN: u32 = 0;
+static MAX: u32 = 69;
+
+pub fn get_min() -> u32 {MIN}
+pub fn get_max() -> u32 {MAX}
 
 pub async fn css() -> impl IntoResponse {
     (
@@ -50,7 +53,7 @@ pub async fn handler_404() -> impl IntoResponse {
 
 pub async fn random() -> Redirect {
     let mut rng = rand::thread_rng();
-    let randnum: u32 = rng.gen_range(min..max);
+    let randnum: u32 = rng.gen_range(get_min()..get_max());
     //let uri: str = format!("/{}",randnum);
     Redirect::temporary(&*format!("/{}", randnum))
 }
@@ -65,10 +68,10 @@ async fn read_file(filename: String) -> Result<Vec<u8>, Box<dyn Error>> {
 fn make_quote_page(quoteid: u32, content: String) -> Html<String> {
     let mut previous = quoteid;
     let mut next = quoteid;
-    if quoteid > min {
+    if quoteid > get_min() {
         previous = quoteid - 1;
     }
-    if quoteid < max {
+    if quoteid < get_max() {
         next = quoteid + 1;
     }
     let previous = previous; // un-mut
@@ -78,8 +81,8 @@ fn make_quote_page(quoteid: u32, content: String) -> Html<String> {
         templates::BaseHtml {
             title: format!("quote #{}", quoteid),
             content: templates::QuoteHtml {
-                first: min,
-                last: max,
+                first: get_min(),
+                last: get_max(),
                 previous: previous,
                 next: next,
                 quote: content,

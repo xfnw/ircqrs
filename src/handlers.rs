@@ -23,8 +23,9 @@ pub async fn css() -> impl IntoResponse {
 
 pub async fn root() -> Html<String> {
     let output = templates::BaseHtml {
-        title: "hello, world".to_string(),
-        content: "none".to_string(),
+        title: "ircqrs".to_string(),
+        content: "<p>welcome to the ircqrs quote database!</p>
+            <p>check out a <a href='/random'>random quote</a></p>".to_string(),
     }
     .to_string();
     Html(output)

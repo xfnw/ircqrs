@@ -83,8 +83,8 @@ fn make_quote_page(quoteid: u32, content: String) -> Html<String> {
             content: templates::QuoteHtml {
                 first: get_min(),
                 last: get_max(),
-                previous: previous,
-                next: next,
+                previous,
+                next,
                 quote: content,
             }
             .to_string(),

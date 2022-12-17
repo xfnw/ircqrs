@@ -59,13 +59,44 @@ pub async fn root() -> Html<String> {
     Html(output)
 }
 
+fn tuple_404_validid(quoteid: u32) -> (StatusCode, Html<String>) {
+    let mut previous = *MIN;
+    let mut next = *MAX;
+    if quoteid > *MIN {
+        previous = quoteid - 1;
+    }
+    if quoteid < *MAX {
+        next = quoteid + 1;
+    }
+    let previous = previous; // un-mut
+    let next = next;
+
+    (
+        StatusCode::NOT_FOUND,
+        Html(
+            templates::BaseHtml {
+                title: "404 not found".to_string(),
+                content: templates::QuoteHtml {
+                    first: *MIN,
+                    last: *MAX,
+                    previous,
+                    next,
+                    quote: "the requested quote does not exist".to_string(),
+                }
+                .to_string(),
+            }
+            .to_string(),
+        ),
+    )
+}
+
 fn tuple_404() -> (StatusCode, Html<String>) {
     (
         StatusCode::NOT_FOUND,
         Html(
             templates::BaseHtml {
                 title: "404 not found".to_string(),
-                content: "the requested quote does not exist".to_string(),
+                content: "the requested page does not exist".to_string(),
             }
             .to_string(),
         ),
@@ -84,8 +115,8 @@ pub async fn random() -> Redirect {
 }
 
 fn make_quote_page(quoteid: u32, content: String) -> Html<String> {
-    let mut previous = quoteid;
-    let mut next = quoteid;
+    let mut previous = *MIN;
+    let mut next = *MAX;
     if quoteid > *MIN {
         previous = quoteid - 1;
     }
@@ -134,7 +165,7 @@ pub async fn view_quote(param: Path<String>) -> impl IntoResponse {
                     ),
                 ),
             },
-            None => tuple_404(),
+            None => tuple_404_validid(quoteid),
         },
         Err(_) => tuple_404(),
     }

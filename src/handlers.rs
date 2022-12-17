@@ -7,8 +7,7 @@ use axum::{
 use include_dir::{include_dir, Dir};
 use lazy_static::lazy_static;
 use rand::Rng;
-use std::{env, error::Error};
-use tokio::fs;
+use std::env;
 
 use crate::templates;
 
@@ -74,13 +73,6 @@ pub async fn random() -> Redirect {
     Redirect::temporary(&*format!("/{}", randnum))
 }
 
-async fn read_file(filename: String) -> Result<Vec<u8>, Box<dyn Error>> {
-    match fs::read(filename).await {
-        Ok(contents) => Ok(contents),
-        Err(e) => Err(Box::new(e)),
-    }
-}
-
 fn make_quote_page(quoteid: u32, content: String) -> Html<String> {
     let mut previous = quoteid;
     let mut next = quoteid;
@@ -112,10 +104,13 @@ fn make_quote_page(quoteid: u32, content: String) -> Html<String> {
 pub async fn view_quote(param: Path<String>) -> impl IntoResponse {
     //(StatusCode::OK,Html("meow".to_string()))
     match param.parse::<u32>() {
-        Ok(quoteid) => match read_file(format!("quotes/{}.txt", quoteid)).await {
-            Ok(content) => match String::from_utf8(content) {
-                Ok(ucontent) => (StatusCode::OK, make_quote_page(quoteid, ucontent)),
-                Err(_) => (
+        Ok(quoteid) => match QUOTES.get_file(format!("{}.txt", quoteid)) {
+            Some(content) => match content.contents_utf8() {
+                Some(ucontent) => (
+                    StatusCode::OK,
+                    make_quote_page(quoteid, ucontent.to_string()),
+                ),
+                None => (
                     StatusCode::INTERNAL_SERVER_ERROR,
                     Html(
                         templates::BaseHtml {
@@ -129,7 +124,7 @@ pub async fn view_quote(param: Path<String>) -> impl IntoResponse {
                     ),
                 ),
             },
-            Err(_) => tuple_404(),
+            None => tuple_404(),
         },
         Err(_) => tuple_404(),
     }

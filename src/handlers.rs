@@ -14,8 +14,18 @@ use crate::templates;
 static QUOTES: Dir<'_> = include_dir!("$CARGO_MANIFEST_DIR/quotes");
 
 lazy_static! {
-    static ref MIN: u32 = 0;
-    static ref MAX: u32 = 69;
+    pub static ref QUOTEENTRIES: Vec<u32> = {
+        let mut out: Vec<u32> = vec![];
+        for i in QUOTES.entries() {
+            let name = i.path().to_str().unwrap();
+            let name = &name[..name.len() - 4];
+            out.push(name.parse::<u32>().unwrap());
+        }
+        out.sort();
+        out
+    };
+    pub static ref MIN: u32 = *QUOTEENTRIES.first().unwrap_or(&0);
+    pub static ref MAX: u32 = *QUOTEENTRIES.last().unwrap_or(&0);
 
     // note that BINPATH will be included verbatim in html output,
     // so it may be an XSS vector.

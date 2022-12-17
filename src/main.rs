@@ -12,6 +12,9 @@ fn get_listen() -> SocketAddr {
 
 #[tokio::main]
 async fn main() {
+    // force lazy_static to initalize
+    eprintln!("loaded {} quotes", (*handlers::QUOTEENTRIES).len());
+
     let app = Router::new()
         .route("/", get(handlers::root))
         .route("/style.css", get(handlers::css))

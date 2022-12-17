@@ -4,21 +4,29 @@ use axum::{
     http::StatusCode,
     response::{AppendHeaders, Html, IntoResponse, Redirect},
 };
-use rand::Rng;
-use std::error::Error;
-use tokio::fs;
 use include_dir::{include_dir, Dir};
+use lazy_static::lazy_static;
+use rand::Rng;
+use std::{env, error::Error};
+use tokio::fs;
 
 use crate::templates;
 
 static QUOTES: Dir<'_> = include_dir!("$CARGO_MANIFEST_DIR/quotes");
 
-// TODO: set this somewhere else lol
-static MIN: u32 = 0;
-static MAX: u32 = 69;
+lazy_static! {
+    static ref MIN: u32 = 0;
+    static ref MAX: u32 = 69;
 
-pub fn get_min() -> u32 {MIN}
-pub fn get_max() -> u32 {MAX}
+    // note that BINPATH will be included verbatim in html output,
+    // so it may be an XSS vector.
+    // we consider this not a non-issue because, presumably,
+    // if an attacker has access to move the binary, they could
+    // just replace it themselves.
+    static ref BINPATH: String = env::current_exe().unwrap()
+        .to_str().unwrap()
+        .to_string();
+}
 
 pub async fn css() -> impl IntoResponse {
     (
@@ -30,8 +38,13 @@ pub async fn css() -> impl IntoResponse {
 pub async fn root() -> Html<String> {
     let output = templates::BaseHtml {
         title: "ircqrs".to_string(),
-        content: "<p>welcome to the ircqrs quote database!</p>
-            <p>check out a <a href='/random'>random quote</a></p>".to_string(),
+        content: format!(
+            "<p>welcome to the ircqrs quote database!</p>
+            <p>check out a <a href='/random'>random quote</a></p>
+            <p>served by {}. <a href='https://github.com/xfnw/ircqrs'>
+            source</a></p>",
+            *BINPATH
+        ),
     }
     .to_string();
     Html(output)
@@ -56,7 +69,7 @@ pub async fn handler_404() -> impl IntoResponse {
 
 pub async fn random() -> Redirect {
     let mut rng = rand::thread_rng();
-    let randnum: u32 = rng.gen_range(get_min()..get_max());
+    let randnum: u32 = rng.gen_range(*MIN..*MAX);
     //let uri: str = format!("/{}",randnum);
     Redirect::temporary(&*format!("/{}", randnum))
 }
@@ -71,10 +84,10 @@ async fn read_file(filename: String) -> Result<Vec<u8>, Box<dyn Error>> {
 fn make_quote_page(quoteid: u32, content: String) -> Html<String> {
     let mut previous = quoteid;
     let mut next = quoteid;
-    if quoteid > get_min() {
+    if quoteid > *MIN {
         previous = quoteid - 1;
     }
-    if quoteid < get_max() {
+    if quoteid < *MAX {
         next = quoteid + 1;
     }
     let previous = previous; // un-mut
@@ -84,8 +97,8 @@ fn make_quote_page(quoteid: u32, content: String) -> Html<String> {
         templates::BaseHtml {
             title: format!("quote #{}", quoteid),
             content: templates::QuoteHtml {
-                first: get_min(),
-                last: get_max(),
+                first: *MIN,
+                last: *MAX,
                 previous,
                 next,
                 quote: content,

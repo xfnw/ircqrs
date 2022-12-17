@@ -7,8 +7,11 @@ use axum::{
 use rand::Rng;
 use std::error::Error;
 use tokio::fs;
+use include_dir::{include_dir, Dir};
 
 use crate::templates;
+
+static QUOTES: Dir<'_> = include_dir!("$CARGO_MANIFEST_DIR/quotes");
 
 // TODO: set this somewhere else lol
 static MIN: u32 = 0;

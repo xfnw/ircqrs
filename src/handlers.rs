@@ -44,6 +44,13 @@ pub async fn css() -> impl IntoResponse {
     )
 }
 
+pub async fn robots() -> impl IntoResponse {
+    (
+        AppendHeaders([(CONTENT_TYPE, "text/plain")]),
+        templates::RobotsTxt {}.to_string(),
+    )
+}
+
 pub async fn root() -> Html<String> {
     let output = templates::BaseHtml {
         title: "ircqrs".to_string(),

@@ -11,6 +11,9 @@ pub struct BaseHtml {
 pub struct StyleCss {}
 
 #[derive(Boilerplate)]
+pub struct RobotsTxt {}
+
+#[derive(Boilerplate)]
 pub struct QuoteHtml {
     pub first: u32,
     pub last: u32,

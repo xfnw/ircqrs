@@ -1,5 +1,7 @@
 html {
 	padding: 0.4em;
+	background: #141415;
+	color: #cdcdcd;
 }
 body {
 	max-width: 70em;
@@ -9,7 +11,28 @@ pre {
 	font-size: 12pt;
 	white-space: pre-wrap;
 }
+a {
+	color: #3291ff;
+	text-decoration: none;
+}
+a:visited {
+	color: #931fff;
+}
+a:hover {
+	text-decoration: underline;
+}
 center > a {
 	font-size: 150%;
-	text-decoration: none;
+}
+@media (prefers-color-scheme: light) {
+	html {
+		background: white;
+		color: #141415;
+	}
+	a {
+		color: #0000EE;
+	}
+	a:visited {
+		color: #551A8B;
+	}
 }

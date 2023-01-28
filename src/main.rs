@@ -1,4 +1,4 @@
-use axum::{handler::Handler, routing::get, Router};
+use axum::{routing::get, Router};
 
 use std::net::SocketAddr;
 
@@ -21,7 +21,7 @@ async fn main() {
         .route("/robots.txt", get(handlers::robots))
         .route("/random", get(handlers::random))
         .route("/:quote", get(handlers::view_quote))
-        .fallback(handlers::handler_404.into_service());
+        .fallback(handlers::handler_404);
 
     let addr = get_listen();
     eprintln!("listening on {}", addr);

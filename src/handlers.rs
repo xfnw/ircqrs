@@ -2,7 +2,7 @@ use axum::{
     extract::Path,
     http::header::CONTENT_TYPE,
     http::StatusCode,
-    response::{AppendHeaders, Html, IntoResponse, Redirect},
+    response::{Html, IntoResponse, Redirect},
 };
 use include_dir::{include_dir, Dir};
 use lazy_static::lazy_static;
@@ -39,16 +39,13 @@ lazy_static! {
 
 pub async fn css() -> impl IntoResponse {
     (
-        AppendHeaders([(CONTENT_TYPE, "text/css")]),
+        [(CONTENT_TYPE, "text/css; charset=utf8")],
         templates::StyleCss {}.to_string(),
     )
 }
 
-pub async fn robots() -> impl IntoResponse {
-    (
-        AppendHeaders([(CONTENT_TYPE, "text/plain")]),
-        templates::RobotsTxt {}.to_string(),
-    )
+pub async fn robots() -> String {
+    templates::RobotsTxt {}.to_string()
 }
 
 pub async fn root() -> Html<String> {

@@ -7,6 +7,7 @@ use axum::{
 use include_dir::{include_dir, Dir};
 use lazy_static::lazy_static;
 use rand::prelude::SliceRandom;
+use std::cmp::{max, min};
 use std::env;
 
 use crate::templates;
@@ -67,10 +68,10 @@ fn tuple_404_validid(quoteid: u32) -> (StatusCode, Html<String>) {
     let mut previous = *MIN;
     let mut next = *MAX;
     if quoteid > *MIN {
-        previous = quoteid - 1;
+        previous = min(*MAX, quoteid - 1);
     }
     if quoteid < *MAX {
-        next = quoteid + 1;
+        next = max(*MIN, quoteid + 1);
     }
     let previous = previous; // un-mut
     let next = next;

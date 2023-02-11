@@ -1,5 +1,8 @@
 [package]
 name = "ircqrs"
+description = "irc quote website thingy"
+repository = "https://github.com/xfnw/ircqrs/"
+license = "MIT"
 version = "0.2.2"
 edition = "2021"
 

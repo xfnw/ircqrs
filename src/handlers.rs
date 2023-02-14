@@ -38,6 +38,10 @@ lazy_static! {
         .to_string();
 }
 
+pub async fn healthping() -> &'static str {
+    "OK"
+}
+
 pub async fn css() -> impl IntoResponse {
     (
         [(CONTENT_TYPE, "text/css; charset=utf8")],

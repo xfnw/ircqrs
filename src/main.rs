@@ -17,9 +17,10 @@ async fn main() {
 
     let app = Router::new()
         .route("/", get(handlers::root))
+        .route("/health", get(handlers::healthping))
+        .route("/random", get(handlers::random))
         .route("/style.css", get(handlers::css))
         .route("/robots.txt", get(handlers::robots))
-        .route("/random", get(handlers::random))
         .route("/:quote", get(handlers::view_quote))
         .fallback(handlers::handler_404);
 

@@ -119,8 +119,8 @@ pub async fn handler_404() -> impl IntoResponse {
 pub async fn random() -> Redirect {
     let mut rng = rand::thread_rng();
     let randnum: u32 = *QUOTEENTRIES.choose(&mut rng).unwrap_or(&0);
-    //let uri: str = format!("/{}",randnum);
-    Redirect::temporary(&format!("/{}", randnum))
+    //let uri: str = format!("{}",randnum);
+    Redirect::temporary(&format!("{}", randnum))
 }
 
 fn make_quote_page(quoteid: u32, content: String) -> Html<String> {

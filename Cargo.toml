@@ -16,4 +16,4 @@ include_dir = "0.7.3"
 lazy_static = "1.4.0"
 rand = "0.8.5"
 serde = "1.0.152"
-tokio = { version = "1.25.0", features = ["full"] }
+tokio = { version = "1.26.0", features = ["full"] }

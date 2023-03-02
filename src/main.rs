@@ -1,13 +1,18 @@
 use axum::{routing::get, Router};
 
-use std::net::SocketAddr;
+use std::{env, net::SocketAddr};
 
 pub mod handlers;
 pub mod templates;
 
 fn get_listen() -> SocketAddr {
-    // TODO: allow customizing this via args or environment variable
-    SocketAddr::from(([127, 0, 0, 1], 8326))
+    // TODO: add IRCQRS_SOCK environment variable for listening
+    // on unix socket
+    match env::var("IRCQRS_BIND") {
+        Ok(value) => value.parse(),
+        Err(_) => "127.0.0.1:8326".parse(),
+    }
+    .expect("failed to parse IRCQRS_BIND")
 }
 
 pub fn create_router() -> Router {

@@ -1,6 +1,10 @@
 # ircqrs
 single-binary irc quote website
 
+## environment variables
+- `IRCQRS_BIND` - set address for ircqrs to listen on, defaults to
+  `127.0.0.1:8326`
+
 ## (re)building
 ircqrs will include the `quotes/` directory when compiling.
 inside, quotes should be stored as plain text files with

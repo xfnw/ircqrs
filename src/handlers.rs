@@ -12,19 +12,14 @@ use std::env;
 
 use crate::templates;
 
+#[cfg(not(test))]
 static QUOTES: Dir<'_> = include_dir!("$CARGO_MANIFEST_DIR/quotes");
 
+#[cfg(test)]
+static QUOTES: Dir<'_> = include_dir!("$CARGO_MANIFEST_DIR/testquotes");
+
 lazy_static! {
-    pub static ref QUOTEENTRIES: Vec<u32> = {
-        let mut out: Vec<u32> = vec![];
-        for i in QUOTES.entries() {
-            let name = i.path().to_str().unwrap();
-            let name = &name[..name.len() - 4];
-            out.push(name.parse::<u32>().unwrap());
-        }
-        out.sort();
-        out
-    };
+    pub static ref QUOTEENTRIES: Vec<u32> = index_quoteentries();
     pub static ref MIN: u32 = *QUOTEENTRIES.first().unwrap_or(&0);
     pub static ref MAX: u32 = *QUOTEENTRIES.last().unwrap_or(&0);
 
@@ -36,6 +31,17 @@ lazy_static! {
     static ref BINPATH: String = env::current_exe().unwrap()
         .to_str().unwrap()
         .to_string();
+}
+
+fn index_quoteentries() -> Vec<u32> {
+    let mut out: Vec<u32> = vec![];
+    for i in QUOTES.entries() {
+        let name = i.path().to_str().unwrap();
+        let name = &name[..name.len() - 4];
+        out.push(name.parse::<u32>().unwrap());
+    }
+    out.sort();
+    out
 }
 
 pub async fn healthping() -> &'static str {
@@ -178,4 +184,9 @@ pub async fn view_quote(param: Path<String>) -> impl IntoResponse {
         },
         Err(_) => tuple_404(),
     }
+}
+
+#[test]
+fn check_indexed_quoteentries() {
+    assert_eq!(*QUOTEENTRIES, vec![5, 6, 9]);
 }

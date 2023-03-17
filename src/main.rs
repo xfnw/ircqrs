@@ -42,13 +42,9 @@ async fn main() {
 }
 
 #[test]
-fn listener_from_envvar() {
+fn test_get_listener() {
     env::set_var("IRCQRS_BIND", "1.2.3.4:3621");
     assert_eq!(get_listen(), "1.2.3.4:3621".parse().unwrap());
-}
-
-#[test]
-fn listener_from_default() {
     env::remove_var("IRCQRS_BIND");
     assert_eq!(get_listen(), "127.0.0.1:8326".parse().unwrap());
 }

@@ -157,7 +157,7 @@ fn make_quote_page(quoteid: u32, content: String) -> Html<String> {
     )
 }
 
-pub async fn view_quote(param: Path<String>) -> impl IntoResponse {
+pub async fn view_quote(param: Path<String>) -> (StatusCode, Html<String>) {
     //(StatusCode::OK,Html("meow".to_string()))
     match param.parse::<u32>() {
         Ok(quoteid) => match QUOTES.get_file(format!("{}.txt", quoteid)) {
@@ -189,4 +189,15 @@ pub async fn view_quote(param: Path<String>) -> impl IntoResponse {
 #[test]
 fn check_indexed_quoteentries() {
     assert_eq!(*QUOTEENTRIES, vec![5, 6, 9]);
+}
+
+#[tokio::test]
+async fn test_quote_retrieval() {
+    let expected = (
+        StatusCode::OK,
+        make_quote_page(5, "hello there!\n".to_string()),
+    );
+    let got = view_quote(Path { 0: "5".to_string() }).await;
+    assert_eq!(got.0, expected.0);
+    assert_eq!(got.1.0, expected.1.0);
 }

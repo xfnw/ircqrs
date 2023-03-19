@@ -199,5 +199,5 @@ async fn test_quote_retrieval() {
     );
     let got = view_quote(Path { 0: "5".to_string() }).await;
     assert_eq!(got.0, expected.0);
-    assert_eq!(got.1.0, expected.1.0);
+    assert_eq!(got.1 .0, expected.1 .0);
 }

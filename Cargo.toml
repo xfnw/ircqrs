@@ -15,5 +15,5 @@ html-escaper = "0.2.0"
 include_dir = "0.7.3"
 lazy_static = "1.4.0"
 rand = "0.8.5"
-serde = "1.0.158"
-tokio = { version = "1.26.0", features = ["full"] }
+serde = "1.0.159"
+tokio = { version = "1.27.0", features = ["full"] }

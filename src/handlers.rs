@@ -251,7 +251,7 @@ pub async fn view_quote(param: Path<String>) -> (StatusCode, Html<String>) {
 
 #[test]
 fn check_indexed_quoteentries() {
-    assert_eq!(*QUOTEENTRIES, vec![5, 6, 9]);
+    assert_eq!(*QUOTEENTRIES, vec![5, 6, 9, 10]);
 }
 
 #[tokio::test]
@@ -268,5 +268,10 @@ async fn test_quote_retrieval() {
 #[test]
 fn test_test() {
     let participants = index_participants();
-    assert_eq!(participants, BTreeMap::new());
+    let mut expected = BTreeMap::new();
+    expected.insert("blåhaj".to_string(), vec![9]);
+    expected.insert("person1".to_string(), vec![5,9]);
+    expected.insert("person2".to_string(), vec![9]);
+
+    assert_eq!(participants, expected);
 }

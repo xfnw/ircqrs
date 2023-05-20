@@ -1,2 +1,6 @@
 <person1> hmm
-<person2> beep
+* person2 beeps
+* blåhaj is a soft toy shark
+* blåhaj is from ikea
+<blåhaj> remember to check for proper unicode support!
+<person2> will do!

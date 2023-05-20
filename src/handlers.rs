@@ -195,7 +195,7 @@ fn check_indexed_quoteentries() {
 async fn test_quote_retrieval() {
     let expected = (
         StatusCode::OK,
-        make_quote_page(5, "hello there!\n".to_string()),
+        make_quote_page(5, "<person1> hello there!\n".to_string()),
     );
     let got = view_quote(Path { 0: "5".to_string() }).await;
     assert_eq!(got.0, expected.0);

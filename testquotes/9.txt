@@ -1,1 +1,2 @@
-hmm
+<person1> hmm
+<person2> beep

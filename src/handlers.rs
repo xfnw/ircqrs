@@ -8,6 +8,7 @@ use include_dir::{include_dir, Dir};
 use lazy_static::lazy_static;
 use rand::prelude::SliceRandom;
 use std::cmp::{max, min};
+use std::collections::BTreeMap;
 use std::env;
 
 use crate::templates;
@@ -42,6 +43,66 @@ fn index_quoteentries() -> Vec<u32> {
     }
     out.sort();
     out
+}
+
+fn index_participants() -> BTreeMap<String, Vec<u32>> {
+    let mut participants: BTreeMap<String, Vec<u32>> = BTreeMap::new();
+    for quoteid in &*QUOTEENTRIES {
+        match get_quote_content(*quoteid) {
+            Ok(quote) => {
+                let mut go = true;
+                let mut p1: char = '\0';
+                let mut p2: char = '\0';
+                let mut person: Vec<char> = vec![];
+                for c in quote.chars() {
+                    if go {
+                        if p1 == '\0' {
+                            if c == '<' || c == '*' {
+                                p1 = c;
+                            }
+                        } else if p1 == '<' {
+                            if c == '>' {
+                                go = false;
+                            } else {
+                                person.push(c);
+                            }
+                        } else if p1 == '*' {
+                            if p2 == ' ' {
+                                if c == ' ' {
+                                    go = false;
+                                } else {
+                                    person.push(c);
+                                }
+                            } else if c == ' ' {
+                                p2 = c;
+                            }
+                        }
+                        if !go {
+                            let perstr: String = person.iter().collect();
+                            person.clear();
+                            (p1, p2) = ('\0', '\0');
+
+                            match participants.get_mut(&perstr) {
+                                Some(inside) => {
+                                    if inside.last().unwrap_or(&0) != quoteid {
+                                    inside.push(*quoteid);
+                                    }
+                                }
+                                None => {
+                                    participants.insert(perstr, vec![*quoteid]);
+                                }
+                            }
+                        }
+                    } else if c == '\n' {
+                        go = true;
+                        (p1, p2) = ('\0', '\0');
+                    }
+                }
+            }
+            Err(_) => continue,
+        }
+    }
+    participants
 }
 
 pub async fn healthping() -> &'static str {
@@ -202,4 +263,10 @@ async fn test_quote_retrieval() {
     let got = view_quote(Path { 0: "5".to_string() }).await;
     assert_eq!(got.0, expected.0);
     assert_eq!(got.1 .0, expected.1 .0);
+}
+
+#[test]
+fn test_test() {
+    let participants = index_participants();
+    assert_eq!(participants, BTreeMap::new());
 }

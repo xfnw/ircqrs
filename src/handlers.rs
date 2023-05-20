@@ -157,30 +157,32 @@ fn make_quote_page(quoteid: u32, content: String) -> Html<String> {
     )
 }
 
+fn get_quote_content(quoteid: u32) -> Result<String, StatusCode> {
+    match QUOTES.get_file(format!("{}.txt", quoteid)) {
+        Some(content) => match content.contents_utf8() {
+            Some(ucontent) => Ok(ucontent.to_string()),
+            None => Err(StatusCode::INTERNAL_SERVER_ERROR),
+        },
+        None => Err(StatusCode::NOT_FOUND),
+    }
+}
+
 pub async fn view_quote(param: Path<String>) -> (StatusCode, Html<String>) {
     //(StatusCode::OK,Html("meow".to_string()))
     match param.parse::<u32>() {
-        Ok(quoteid) => match QUOTES.get_file(format!("{}.txt", quoteid)) {
-            Some(content) => match content.contents_utf8() {
-                Some(ucontent) => (
-                    StatusCode::OK,
-                    make_quote_page(quoteid, ucontent.to_string()),
+        Ok(quoteid) => match get_quote_content(quoteid) {
+            Ok(content) => (StatusCode::OK, make_quote_page(quoteid, content)),
+            Err(StatusCode::NOT_FOUND) => tuple_404_validid(quoteid),
+            Err(_) => (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                Html(
+                    templates::BaseHtml {
+                        title: "500 internal server error".to_string(),
+                        content: format!("there was an error converting quote {} to utf8", quoteid),
+                    }
+                    .to_string(),
                 ),
-                None => (
-                    StatusCode::INTERNAL_SERVER_ERROR,
-                    Html(
-                        templates::BaseHtml {
-                            title: "500 internal server error".to_string(),
-                            content: format!(
-                                "there was an error converting quote {} to utf8",
-                                quoteid
-                            ),
-                        }
-                        .to_string(),
-                    ),
-                ),
-            },
-            None => tuple_404_validid(quoteid),
+            ),
         },
         Err(_) => tuple_404(),
     }

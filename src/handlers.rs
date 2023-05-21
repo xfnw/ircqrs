@@ -21,6 +21,7 @@ static QUOTES: Dir<'_> = include_dir!("$CARGO_MANIFEST_DIR/testquotes");
 
 lazy_static! {
     pub static ref QUOTEENTRIES: Vec<u32> = index_quoteentries();
+    pub static ref PARTICIPANTS: BTreeMap<String, Vec<u32>> = index_participants();
     pub static ref MIN: u32 = *QUOTEENTRIES.first().unwrap_or(&0);
     pub static ref MAX: u32 = *QUOTEENTRIES.last().unwrap_or(&0);
 
@@ -254,6 +255,16 @@ fn check_indexed_quoteentries() {
     assert_eq!(*QUOTEENTRIES, vec![5, 6, 9, 10]);
 }
 
+#[test]
+fn check_indexed_participants() {
+    let mut expected = BTreeMap::new();
+    expected.insert("blåhaj".to_string(), vec![9]);
+    expected.insert("person1".to_string(), vec![5, 9]);
+    expected.insert("person2".to_string(), vec![9]);
+
+    assert_eq!(*PARTICIPANTS, expected);
+}
+
 #[tokio::test]
 async fn test_quote_retrieval() {
     let expected = (
@@ -263,15 +274,4 @@ async fn test_quote_retrieval() {
     let got = view_quote(Path { 0: "5".to_string() }).await;
     assert_eq!(got.0, expected.0);
     assert_eq!(got.1 .0, expected.1 .0);
-}
-
-#[test]
-fn test_test() {
-    let participants = index_participants();
-    let mut expected = BTreeMap::new();
-    expected.insert("blåhaj".to_string(), vec![9]);
-    expected.insert("person1".to_string(), vec![5, 9]);
-    expected.insert("person2".to_string(), vec![9]);
-
-    assert_eq!(participants, expected);
 }

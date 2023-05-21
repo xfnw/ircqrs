@@ -24,6 +24,14 @@ a:hover {
 center > a {
 	font-size: 150%;
 }
+ul {
+	display: inline-block;
+}
+li {
+	float: left;
+	min-width: 23%;
+	padding-right: 1em;
+}
 @media (prefers-color-scheme: light) {
 	html {
 		background: white;
@@ -34,5 +42,10 @@ center > a {
 	}
 	a:visited {
 		color: #551A8B;
+	}
+}
+@media only screen and (max-width: 40em) {
+	li {
+		min-width: 40%;
 	}
 }

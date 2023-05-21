@@ -137,13 +137,13 @@ pub async fn robots() -> String {
 pub async fn root() -> Html<String> {
     let output = templates::BaseHtml {
         title: "ircqrs".to_string(),
-        content: format!(
-            "<p>welcome to the ircqrs quote database!</p>
-            <p>check out a <a href='/random'>random quote</a></p>
-            <p>served by {}. <a href='https://github.com/xfnw/ircqrs'>
-            source</a></p>",
-            *BINPATH
-        ),
+        content: templates::HomepageHtml {
+            first: *MIN,
+            last: *MAX,
+            binpath: &BINPATH,
+            people: &PARTICIPANTS,
+        }
+        .to_string(),
         relpath: "",
     }
     .to_string();

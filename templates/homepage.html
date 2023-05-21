@@ -1,0 +1,15 @@
+<p>welcome to the ircqrs quote database!</p>
+<p>check out the <a href="{{self.first}}">first quote</a>,
+the <a href="{{self.last}}">last quote</a>,
+or a <a href='random'>random quote</a></p>
+
+%% if !self.people.is_empty() {
+<h2>look for people</h2>
+<ul>
+%% for (person, _) in self.people.iter() {
+<li><a href="by/{{person}}">{{person}}</a></li>
+%% }
+</ul>
+%% }
+
+<p>served by {{self.binpath}}. <a href='https://github.com/xfnw/ircqrs'>source</a></p>

@@ -5,6 +5,7 @@ use html_escaper::{Escape, Trusted};
 pub struct BaseHtml {
     pub title: String,
     pub content: String,
+    pub relpath: &'static str,
 }
 
 #[derive(Boilerplate)]
@@ -20,4 +21,10 @@ pub struct QuoteHtml {
     pub previous: u32,
     pub next: u32,
     pub quote: String,
+}
+
+#[derive(Boilerplate)]
+pub struct ParticipantHtml {
+    pub person: String,
+    pub participating: Vec<String>,
 }

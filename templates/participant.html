@@ -1,0 +1,6 @@
+{% if !self.participating.is_empty() {
+for quote in self.participating.to_owned() { %}
+{{Trusted(quote)}}
+%% }} else {
+{{self.person}} does not have any quotes.
+%% }

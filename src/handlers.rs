@@ -131,6 +131,7 @@ pub async fn root() -> Html<String> {
             source</a></p>",
             *BINPATH
         ),
+        relpath: "",
     }
     .to_string();
     Html(output)
@@ -161,6 +162,7 @@ fn tuple_404_validid(quoteid: u32) -> (StatusCode, Html<String>) {
                     quote: "the requested quote does not exist".to_string(),
                 }
                 .to_string(),
+                relpath: "",
             }
             .to_string(),
         ),
@@ -174,6 +176,7 @@ fn tuple_404() -> (StatusCode, Html<String>) {
             templates::BaseHtml {
                 title: "404 not found".to_string(),
                 content: "the requested page does not exist".to_string(),
+                relpath: "",
             }
             .to_string(),
         ),
@@ -214,6 +217,7 @@ fn make_quote_page(quoteid: u32, content: String) -> Html<String> {
                 quote: content,
             }
             .to_string(),
+            relpath: "",
         }
         .to_string(),
     )
@@ -241,6 +245,7 @@ pub async fn view_quote(param: Path<String>) -> (StatusCode, Html<String>) {
                     templates::BaseHtml {
                         title: "500 internal server error".to_string(),
                         content: format!("there was an error converting quote {} to utf8", quoteid),
+                        relpath: "",
                     }
                     .to_string(),
                 ),
@@ -248,6 +253,24 @@ pub async fn view_quote(param: Path<String>) -> (StatusCode, Html<String>) {
         },
         Err(_) => tuple_404(),
     }
+}
+
+pub async fn view_participant(Path(person): Path<String>) -> (StatusCode, Html<String>) {
+    (
+        StatusCode::OK,
+        Html(
+            templates::BaseHtml {
+                title: format!("quotes by {}", person),
+                content: templates::ParticipantHtml {
+                    person: person,
+                    participating: vec![],
+                }
+                .to_string(),
+                relpath: "../",
+            }
+            .to_string(),
+        ),
+    )
 }
 
 #[test]

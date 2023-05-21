@@ -23,6 +23,7 @@ pub fn create_router() -> Router {
         .route("/style.css", get(handlers::css))
         .route("/robots.txt", get(handlers::robots))
         .route("/:quote", get(handlers::view_quote))
+        .route("/by/:person", get(handlers::view_participant))
         .fallback(handlers::handler_404)
 }
 
@@ -30,6 +31,7 @@ pub fn create_router() -> Router {
 async fn main() {
     // force lazy_static to initalize
     eprintln!("loaded {} quotes", (*handlers::QUOTEENTRIES).len());
+    eprintln!("loaded {} participants", (*handlers::PARTICIPANTS).len());
 
     let app = create_router();
 

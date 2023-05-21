@@ -1,6 +1,9 @@
-{% if !self.participating.is_empty() {
-for quote in self.participating { %}
-<a href="../{{quote}}">{{quote}}</a>
-%% }} else {
+%% if !self.participating.is_empty() {
+<ul>
+%% for quote in self.participating {
+<li><a href="../{{quote}}">{{quote}}</a></li>
+%% }
+</ul>
+%% } else {
 {{self.person}} does not have any quotes.
 %% }

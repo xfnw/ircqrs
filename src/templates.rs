@@ -1,6 +1,8 @@
 use boilerplate::Boilerplate;
 use html_escaper::{Escape, Trusted};
+use percent_encoding::{utf8_percent_encode, AsciiSet, NON_ALPHANUMERIC};
 use std::collections::BTreeMap;
+pub const P_ENCODE_SET: &AsciiSet = &NON_ALPHANUMERIC.remove(b'-').remove(b'_');
 
 #[derive(Boilerplate)]
 pub struct BaseHtml {

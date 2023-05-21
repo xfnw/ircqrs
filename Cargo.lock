@@ -300,6 +300,7 @@ dependencies = [
  "html-escaper",
  "include_dir",
  "lazy_static",
+ "percent-encoding",
  "rand",
  "serde",
  "tokio",

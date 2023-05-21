@@ -7,7 +7,9 @@ or a <a href='random'>random quote</a></p>
 <h2>look for people</h2>
 <ul>
 %% for (person, _) in self.people.iter() {
-<li><a href="by/{{person}}">{{person}}</a></li>
+<li><a href="by/{{
+    utf8_percent_encode(person, P_ENCODE_SET)
+}}">{{person}}</a></li>
 %% }
 </ul>
 %% }

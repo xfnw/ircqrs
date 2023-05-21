@@ -281,7 +281,7 @@ pub async fn view_participant(Path(person): Path<String>) -> (StatusCode, Html<S
                 title: format!("quotes featuring {}", person),
                 content: templates::ParticipantHtml {
                     person: &person,
-                    participating: &participating.unwrap_or(&vec![]),
+                    participating: participating.unwrap_or(&vec![]),
                 }
                 .to_string(),
                 relpath: "../",
@@ -312,7 +312,7 @@ async fn test_quote_retrieval() {
         StatusCode::OK,
         make_quote_page(5, "<person1> hello there!\n".to_string()),
     );
-    let got = view_quote(Path { 0: "5".to_string() }).await;
+    let got = view_quote(Path("5".to_string())).await;
     assert_eq!(got.0, expected.0);
     assert_eq!(got.1 .0, expected.1 .0);
 }

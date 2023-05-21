@@ -26,6 +26,7 @@ center > a {
 }
 ul {
 	display: inline-block;
+	margin: 0;
 }
 li {
 	float: left;

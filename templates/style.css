@@ -1,9 +1,7 @@
-html {
+body {
 	padding: 0.4em;
 	background: #141415;
 	color: #cdcdcd;
-}
-body {
 	max-width: 70em;
 	margin: 0 auto;
 }
@@ -34,7 +32,7 @@ li {
 	padding-right: 1em;
 }
 @media (prefers-color-scheme: light) {
-	html {
+	body {
 		background: white;
 		color: #141415;
 	}

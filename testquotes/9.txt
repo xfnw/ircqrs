@@ -4,3 +4,9 @@
 * blåhaj is from ikea
 <blåhaj> remember to check for proper unicode support!
 <person2> will do!
+
+<-- not a person talking
+-->
+this is * also not a person talking
+neither *is this
+*nor <this>

@@ -57,9 +57,18 @@ fn index_participants() -> BTreeMap<String, Vec<u32>> {
                 let mut person: Vec<char> = vec![];
                 for c in quote.chars() {
                     if go {
+                        if c == '\n' {
+                            go = false;
+                            person.clear();
+                            (p1, p2) = ('\0', '\0');
+                            continue;
+                        }
                         if p1 == '\0' {
                             if c == '<' || c == '*' {
                                 p1 = c;
+                            } else {
+                                go = false;
+                                continue;
                             }
                         } else if p1 == '<' {
                             if c == '>' {
@@ -76,6 +85,10 @@ fn index_participants() -> BTreeMap<String, Vec<u32>> {
                                 }
                             } else if c == ' ' {
                                 p2 = c;
+                            } else {
+                                go = false;
+                                p1 = '\0';
+                                continue;
                             }
                         }
                         if !go {

@@ -24,7 +24,7 @@ pub struct QuoteHtml {
 }
 
 #[derive(Boilerplate)]
-pub struct ParticipantHtml {
-    pub person: String,
-    pub participating: Vec<String>,
+pub struct ParticipantHtml<'a> {
+    pub person: &'a String,
+    pub participating: &'a Vec<u32>,
 }

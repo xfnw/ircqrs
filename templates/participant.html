@@ -1,6 +1,6 @@
 {% if !self.participating.is_empty() {
-for quote in self.participating.to_owned() { %}
-{{Trusted(quote)}}
+for quote in self.participating { %}
+<a href="../{{quote}}">{{quote}}</a>
 %% }} else {
 {{self.person}} does not have any quotes.
 %% }

@@ -269,14 +269,19 @@ pub async fn view_quote(param: Path<String>) -> (StatusCode, Html<String>) {
 }
 
 pub async fn view_participant(Path(person): Path<String>) -> (StatusCode, Html<String>) {
+    let (returncode, participating) = match (*PARTICIPANTS).get(&person) {
+        Some(quotes) => (StatusCode::OK, Some(quotes)),
+        None => (StatusCode::NOT_FOUND, None),
+    };
+
     (
-        StatusCode::OK,
+        returncode,
         Html(
             templates::BaseHtml {
-                title: format!("quotes by {}", person),
+                title: format!("quotes featuring {}", person),
                 content: templates::ParticipantHtml {
-                    person: person,
-                    participating: vec![],
+                    person: &person,
+                    participating: &participating.unwrap_or(&vec![]),
                 }
                 .to_string(),
                 relpath: "../",

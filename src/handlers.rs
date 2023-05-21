@@ -51,8 +51,8 @@ fn index_participants() -> BTreeMap<String, Vec<u32>> {
         match get_quote_content(*quoteid) {
             Ok(quote) => {
                 let mut go = true;
-                let mut p1: char = '\0';
-                let mut p2: char = '\0';
+                let mut p1 = '\0';
+                let mut p2 = '\0';
                 let mut person: Vec<char> = vec![];
                 for c in quote.chars() {
                     if go {
@@ -85,7 +85,7 @@ fn index_participants() -> BTreeMap<String, Vec<u32>> {
                             match participants.get_mut(&perstr) {
                                 Some(inside) => {
                                     if inside.last().unwrap_or(&0) != quoteid {
-                                    inside.push(*quoteid);
+                                        inside.push(*quoteid);
                                     }
                                 }
                                 None => {
@@ -270,7 +270,7 @@ fn test_test() {
     let participants = index_participants();
     let mut expected = BTreeMap::new();
     expected.insert("blåhaj".to_string(), vec![9]);
-    expected.insert("person1".to_string(), vec![5,9]);
+    expected.insert("person1".to_string(), vec![5, 9]);
     expected.insert("person2".to_string(), vec![9]);
 
     assert_eq!(participants, expected);

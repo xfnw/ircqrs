@@ -48,3 +48,8 @@ li {
 		min-width: 40%;
 	}
 }
+@media only print {
+	center {
+		display: none;
+	}
+}

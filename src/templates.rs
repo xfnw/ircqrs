@@ -5,8 +5,8 @@ use std::collections::BTreeMap;
 pub const P_ENCODE_SET: &AsciiSet = &NON_ALPHANUMERIC.remove(b'-').remove(b'_');
 
 #[derive(Boilerplate)]
-pub struct BaseHtml {
-    pub title: String,
+pub struct BaseHtml<'a> {
+    pub title: &'a str,
     pub content: String,
     pub relpath: &'static str,
 }

@@ -139,7 +139,7 @@ pub async fn robots() -> String {
 
 pub async fn root() -> Html<String> {
     let output = templates::BaseHtml {
-        title: "ircqrs".to_string(),
+        title: "ircqrs",
         content: templates::HomepageHtml {
             first: *MIN,
             last: *MAX,
@@ -169,7 +169,7 @@ fn tuple_404_validid(quoteid: u32) -> (StatusCode, Html<String>) {
         StatusCode::NOT_FOUND,
         Html(
             templates::BaseHtml {
-                title: "404 not found".to_string(),
+                title: "404 not found",
                 content: templates::QuoteHtml {
                     first: *MIN,
                     last: *MAX,
@@ -190,7 +190,7 @@ fn tuple_404() -> (StatusCode, Html<String>) {
         StatusCode::NOT_FOUND,
         Html(
             templates::BaseHtml {
-                title: "404 not found".to_string(),
+                title: "404 not found",
                 content: "the requested page does not exist".to_string(),
                 relpath: "",
             }
@@ -224,7 +224,7 @@ fn make_quote_page(quoteid: u32, content: String) -> Html<String> {
 
     Html(
         templates::BaseHtml {
-            title: format!("quote #{}", quoteid),
+            title: format!("quote #{}", quoteid).as_ref(),
             content: templates::QuoteHtml {
                 first: *MIN,
                 last: *MAX,
@@ -259,7 +259,7 @@ pub async fn view_quote(param: Path<String>) -> (StatusCode, Html<String>) {
                 StatusCode::INTERNAL_SERVER_ERROR,
                 Html(
                     templates::BaseHtml {
-                        title: "500 internal server error".to_string(),
+                        title: "500 internal server error",
                         content: format!("there was an error converting quote {} to utf8", quoteid),
                         relpath: "",
                     }
@@ -281,7 +281,7 @@ pub async fn view_participant(Path(person): Path<String>) -> (StatusCode, Html<S
         returncode,
         Html(
             templates::BaseHtml {
-                title: format!("quotes featuring {}", person),
+                title: format!("quotes featuring {}", person).as_ref(),
                 content: templates::ParticipantHtml {
                     person: &person,
                     participating: participating.unwrap_or(&vec![]),

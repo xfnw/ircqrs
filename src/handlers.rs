@@ -24,15 +24,7 @@ lazy_static! {
     pub static ref PARTICIPANTS: BTreeMap<String, Vec<u32>> = index_participants();
     pub static ref MIN: u32 = *QUOTEENTRIES.first().unwrap_or(&0);
     pub static ref MAX: u32 = *QUOTEENTRIES.last().unwrap_or(&0);
-
-    // note that BINPATH will be included verbatim in html output,
-    // so it may be an XSS vector.
-    // we consider this not a non-issue because, presumably,
-    // if an attacker has access to move the binary, they could
-    // just replace it themselves.
-    static ref BINPATH: String = env::current_exe().unwrap()
-        .to_str().unwrap()
-        .to_string();
+    static ref BINPATH: String = env::current_exe().unwrap().to_str().unwrap().to_string();
 }
 
 fn index_quoteentries() -> Vec<u32> {
@@ -58,6 +50,7 @@ fn index_participants() -> BTreeMap<String, Vec<u32>> {
                 for c in quote.chars() {
                     if go {
                         if c == '\n' {
+                            // names may not span multiple lines, reset
                             go = false;
                             person.clear();
                             (p1, p2) = ('\0', '\0');
@@ -71,12 +64,14 @@ fn index_participants() -> BTreeMap<String, Vec<u32>> {
                                 continue;
                             }
                         } else if p1 == '<' {
+                            // <name> says something lines
                             if c == '>' {
                                 go = false;
                             } else {
                                 person.push(c);
                             }
                         } else if p1 == '*' {
+                            // * name does an action lines
                             if p2 == ' ' {
                                 if c == ' ' {
                                     go = false;
@@ -84,6 +79,8 @@ fn index_participants() -> BTreeMap<String, Vec<u32>> {
                                     person.push(c);
                                 }
                             } else if c == ' ' {
+                                // action lines do not have a character for
+                                // name ending, so we end on a space
                                 p2 = c;
                             } else {
                                 go = false;
@@ -92,6 +89,11 @@ fn index_participants() -> BTreeMap<String, Vec<u32>> {
                             }
                         }
                         if !go {
+                            // go was set to false during this iteration
+                            // we successfully parsed out a name
+
+                            // there is not a good way to convert from
+                            // Vec<char> to String
                             let perstr: String = person.iter().collect();
                             person.clear();
                             (p1, p2) = ('\0', '\0');
@@ -108,12 +110,13 @@ fn index_participants() -> BTreeMap<String, Vec<u32>> {
                             }
                         }
                     } else if c == '\n' {
+                        // reset for the next line
                         go = true;
                         (p1, p2) = ('\0', '\0');
                     }
                 }
             }
-            Err(_) => continue,
+            Err(_) => continue, // skip unreadable quotes
         }
     }
     participants

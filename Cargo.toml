@@ -3,7 +3,7 @@ name = "ircqrs"
 description = "irc quote website thingy"
 repository = "https://github.com/xfnw/ircqrs/"
 license = "MIT"
-version = "0.3.0"
+version = "0.3.1"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
@@ -17,4 +17,4 @@ lazy_static = "1.4.0"
 percent-encoding = "2.2.0"
 rand = "0.8.5"
 serde = "1.0.163"
-tokio = { version = "1.28.1", features = ["full"] }
+tokio = { version = "1.28.2", features = ["full"] }

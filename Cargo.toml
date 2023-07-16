@@ -16,5 +16,5 @@ include_dir = "0.7.3"
 lazy_static = "1.4.0"
 percent-encoding = "2.3.0"
 rand = "0.8.5"
-serde = "1.0.166"
+serde = "1.0.171"
 tokio = { version = "1.29.1", features = ["full"] }

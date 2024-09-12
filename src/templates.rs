@@ -29,7 +29,7 @@ pub struct QuoteHtml {
 #[derive(Boilerplate)]
 pub struct ParticipantHtml<'a> {
     pub person: &'a String,
-    pub participating: &'a Vec<u32>,
+    pub participating: &'a [u32],
 }
 
 #[derive(Boilerplate)]

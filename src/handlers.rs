@@ -33,7 +33,7 @@ fn index_quoteentries() -> Vec<u32> {
         let name = &name[..name.len() - 4];
         out.push(name.parse::<u32>().unwrap());
     }
-    out.sort();
+    out.sort_unstable();
     out
 }
 
@@ -206,7 +206,7 @@ pub async fn random() -> Redirect {
     let mut rng = rand::rng();
     let randnum: u32 = *QUOTEENTRIES.choose(&mut rng).unwrap_or(&0);
     //let uri: str = format!("{}",randnum);
-    Redirect::temporary(&format!("{}", randnum))
+    Redirect::temporary(&format!("{randnum}"))
 }
 
 fn make_quote_page(quoteid: u32, content: String) -> Html<String> {
@@ -223,7 +223,7 @@ fn make_quote_page(quoteid: u32, content: String) -> Html<String> {
 
     Html(
         templates::BaseHtml {
-            title: format!("quote #{}", quoteid).as_ref(),
+            title: format!("quote #{quoteid}").as_ref(),
             content: templates::QuoteHtml {
                 first: *MIN,
                 last: *MAX,
@@ -239,7 +239,7 @@ fn make_quote_page(quoteid: u32, content: String) -> Html<String> {
 }
 
 fn get_quote_content(quoteid: u32) -> Result<String, StatusCode> {
-    match QUOTES.get_file(format!("{}.txt", quoteid)) {
+    match QUOTES.get_file(format!("{quoteid}.txt")) {
         Some(content) => match content.contents_utf8() {
             Some(ucontent) => Ok(ucontent.to_string()),
             None => Err(StatusCode::INTERNAL_SERVER_ERROR),
@@ -259,7 +259,7 @@ pub async fn view_quote(param: Path<String>) -> (StatusCode, Html<String>) {
                 Html(
                     templates::BaseHtml {
                         title: "500 internal server error",
-                        content: format!("there was an error converting quote {} to utf8", quoteid),
+                        content: format!("there was an error converting quote {quoteid} to utf8"),
                         relpath: "",
                     }
                     .to_string(),

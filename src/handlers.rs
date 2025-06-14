@@ -6,7 +6,7 @@ use axum::{
 };
 use include_dir::{include_dir, Dir};
 use lazy_static::lazy_static;
-use rand::prelude::SliceRandom;
+use rand::prelude::IndexedRandom;
 use std::cmp::{max, min};
 use std::collections::BTreeMap;
 use std::env;
@@ -204,7 +204,7 @@ pub async fn handler_404() -> impl IntoResponse {
 }
 
 pub async fn random() -> Redirect {
-    let mut rng = rand::thread_rng();
+    let mut rng = rand::rng();
     let randnum: u32 = *QUOTEENTRIES.choose(&mut rng).unwrap_or(&0);
     //let uri: str = format!("{}",randnum);
     Redirect::temporary(&format!("{}", randnum))

@@ -1,6 +1,6 @@
 use axum::{routing::get, Router};
-
 use std::{env, net::SocketAddr};
+use tokio::net::TcpListener;
 
 pub mod handlers;
 pub mod templates;
@@ -35,10 +35,9 @@ async fn main() {
 
     let app = create_router();
 
-    let addr = get_listen();
-    eprintln!("listening on {}", addr);
-    axum::Server::bind(&addr)
-        .serve(app.into_make_service())
+    let listener = TcpListener::bind(get_listen()).await.unwrap();
+    eprintln!("listening on {}", listener.local_addr().unwrap());
+    axum::serve(listener, app.into_make_service())
         .await
         .unwrap();
 }

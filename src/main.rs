@@ -29,7 +29,7 @@ pub fn create_router() -> Router {
 
 #[tokio::main]
 async fn main() {
-    // force lazy_static to initalize
+    // force lazy locks to initalize
     eprintln!("loaded {} quotes", (*handlers::QUOTEENTRIES).len());
     eprintln!("loaded {} participants", (*handlers::PARTICIPANTS).len());
 

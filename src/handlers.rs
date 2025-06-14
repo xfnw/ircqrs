@@ -5,11 +5,11 @@ use axum::{
     response::{Html, IntoResponse, Redirect},
 };
 use include_dir::{include_dir, Dir};
-use lazy_static::lazy_static;
 use rand::prelude::IndexedRandom;
 use std::cmp::{max, min};
 use std::collections::BTreeMap;
 use std::env;
+use std::sync::LazyLock;
 
 use crate::templates;
 
@@ -19,13 +19,12 @@ static QUOTES: Dir<'_> = include_dir!("$CARGO_MANIFEST_DIR/quotes");
 #[cfg(test)]
 static QUOTES: Dir<'_> = include_dir!("$CARGO_MANIFEST_DIR/testquotes");
 
-lazy_static! {
-    pub static ref QUOTEENTRIES: Vec<u32> = index_quoteentries();
-    pub static ref PARTICIPANTS: BTreeMap<String, Vec<u32>> = index_participants();
-    pub static ref MIN: u32 = *QUOTEENTRIES.first().unwrap_or(&0);
-    pub static ref MAX: u32 = *QUOTEENTRIES.last().unwrap_or(&0);
-    static ref BINPATH: String = env::current_exe().unwrap().to_str().unwrap().to_string();
-}
+pub static QUOTEENTRIES: LazyLock<Vec<u32>> = LazyLock::new(index_quoteentries);
+pub static PARTICIPANTS: LazyLock<BTreeMap<String, Vec<u32>>> = LazyLock::new(index_participants);
+pub static MIN: LazyLock<u32> = LazyLock::new(|| *QUOTEENTRIES.first().unwrap_or(&0));
+pub static MAX: LazyLock<u32> = LazyLock::new(|| *QUOTEENTRIES.last().unwrap_or(&0));
+static BINPATH: LazyLock<String> =
+    LazyLock::new(|| env::current_exe().unwrap().to_str().unwrap().to_string());
 
 fn index_quoteentries() -> Vec<u32> {
     let mut out: Vec<u32> = vec![];
